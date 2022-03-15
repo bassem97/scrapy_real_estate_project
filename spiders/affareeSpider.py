@@ -61,6 +61,7 @@ class Spider(scrapy.Spider):
             item['superficie_habitable'] = resource.css("div.AnnoncesList_section7877o__bOPTn div:nth-child(3) p:nth-child(2) span:nth-child(2)::text").get()
             item['dateAnnonce'] = resource.css("div.AnnoncesList_section7877o__bOPTn div:nth-child(3) p:nth-child(3)::text").get()
             item['link'] = resource.css("a::attr(href)").get()
+            item['image'] = resource.css("img.AnnoncesList_item_imagePic__LPNER::src(href)").get()
             # item['typeImm'] = resource.css("div.info-row.amenities.hide-on-grid p:nth-child(2)::text").get()
             # item['gouvernorat'] = resource.css("address a:nth-child(1)::text").get()
             # item['delegation'] = resource.css("address a:nth-child(1)::text").get()

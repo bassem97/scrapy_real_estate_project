@@ -33,6 +33,7 @@ class RealestateScraperItem(scrapy.Item):
     tel = scrapy.Field()
     agence = scrapy.Field()
     reference = scrapy.Field()
+    image = scrapy.Field()
 
 
 class Spider(scrapy.Spider):
@@ -53,6 +54,7 @@ class Spider(scrapy.Spider):
             item['nbpiece'] = resource.css("p span:nth-child(1)::text").get()
             item['salle_de_bain'] = resource.css("p span:nth-child(2)::text").get()
             item['superficie_habitable'] = resource.css("p span:nth-child(3)::text").get()
+            item['image'] = resource.css("img.attachment-houzez-property-thumb-image.size-houzez-property-thumb-image.wp-post-image::attr(src)").get()
             yield item
         next_page = response.css("ul.pagination li:nth-last-child(2) a::attr(href)").get()
         if next_page is not None:
