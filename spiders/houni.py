@@ -42,22 +42,30 @@ class RealestateScraperItem(scrapy.Item):
 
 
 class Spider(scrapy.Spider):
-    name = 'cavaSpider'
-    start_urls = ['https://cava.tn/category/immobilier/appartemen']
+    name = 'houniSpider'
+    start_urls = ['https://houni.tn/immobiliers/achat?categories=0&categories=1&categories=3&categories=2&budgetMin=10000&viewType=gallery']
+    for i in range(2, 1431):
+        start_urls.append(
+            'https://houni.tn/immobiliers/achat?categories=0&categories=1&categories=3&categories=2&budgetMin=10000&viewType=gallery&currentPage' + str( i))
 
     def parse(self, response):
-        list = response.css('div.col-xs-12.col-sm-12.col-md-12.col-lg-12.no-hor-padding div#fh5co-board div.columncls')
+        total_annonce_string = response.css("strong.is-italic::text").get()
+        total_annonce_number = int(''.join(filter(lambda i: i.isdigit(), total_annonce_string)))
+
+        list = response.css('div.card')
         for resource in list:
             item = RealestateScraperItem()
-            item['link'] = resource.css(
-                'div.image-grid.col-xs-12.col-sm-12.col-md-12.col-lg-12.no-hor-padding a::attr(href)').get()
-            item['title'] = resource.css(
-                'div.item-name.col-xs-12.col-sm-12.col-md-12.col-lg-12.no-hor-padding.pro_title a::text').get()
+            item['link'] = resource.css('a.coveringLink::attr(href)').get()
+            item['title'] = resource.css('h5.title.has-text-weight-bold.is-size-5 span span::text').get()
             # if response.css("h4.listingH4.floatR::text").get() is None
-            item['price'] = resource.css("div.price.bold.col-xs-12.col-sm-12.col-md-12.col-lg-12.no-hor-padding.pro_price span:nth-child(2)::text").get()
-            item['adresse'] = resource.css("span.product-location::text").get()
-            if resource.css("img.imgcls::attr(src)").get() is not None:
-                item['thumbnail_url'] = resource.css("img.imgcls::attr(src)").get()
+            item['adresse'] = resource.css("p.subtitle.is-size-6.has-text-grey-darker.mb-3 span::text").get()
+            item['price'] = resource.css("div.card-footer-item.has-text-primary.has-text-weight-bold.is-size-5::text").get()
+            item['nbpiece'] = resource.css("div.card-details.has-text-grey-darker.mb-2 div div::text").get()
+            item['salle_de_bain'] = resource.css("div.card-details.has-text-grey-darker.mb-2 div:nth-child(2) div::text").get()
+            item['superficie_habitable'] = resource.css("div.card-details.has-text-grey-darker.mb-2 div:nth-child(3) div::text").get()
+
+            if resource.css("figure.image.is-3by2 img::attr(src)").get() is not None:
+                item['thumbnail_url'] = resource.css("figure.image.is-3by2 img::attr(src)").get()
                 item['thumbnail_name'] = item['thumbnail_url'].split('/')[-1]
             yield item
         # next_page = response.css("div.load-more-txt").get()

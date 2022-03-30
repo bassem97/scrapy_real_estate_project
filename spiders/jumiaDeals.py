@@ -1,8 +1,5 @@
 import scrapy
 
-
-
-
 # from realestate_scraper.items import RealestateScraperItem
 
 
@@ -36,30 +33,37 @@ class RealestateScraperItem(scrapy.Item):
     tel = scrapy.Field()
     agence = scrapy.Field()
     reference = scrapy.Field()
+    image = scrapy.Field()
     thumbnail_url = scrapy.Field()
     thumbnail_name = scrapy.Field()
-    nbpiece_superficie_habitable = scrapy.Field()
+
 
 
 class Spider(scrapy.Spider):
-    name = 'cavaSpider'
-    start_urls = ['https://cava.tn/category/immobilier/appartemen']
+    name = 'jumiaDealSpider'
+    start_urls = ['https://deals.jumia.com.tn/appartements-a-vendre',
+                  'https://deals.jumia.com.tn/maisons-a-vendre',
+                  'https://deals.jumia.com.tn/terrains-parcelles',
+                  'https://deals.jumia.com.tn/locaux-commerciaux-bureaux'
+                  ]
+
 
     def parse(self, response):
-        list = response.css('div.col-xs-12.col-sm-12.col-md-12.col-lg-12.no-hor-padding div#fh5co-board div.columncls')
+        list = response.css("article.post-holder.product-click")
         for resource in list:
             item = RealestateScraperItem()
-            item['link'] = resource.css(
-                'div.image-grid.col-xs-12.col-sm-12.col-md-12.col-lg-12.no-hor-padding a::attr(href)').get()
-            item['title'] = resource.css(
-                'div.item-name.col-xs-12.col-sm-12.col-md-12.col-lg-12.no-hor-padding.pro_title a::text').get()
-            # if response.css("h4.listingH4.floatR::text").get() is None
-            item['price'] = resource.css("div.price.bold.col-xs-12.col-sm-12.col-md-12.col-lg-12.no-hor-padding.pro_price span:nth-child(2)::text").get()
-            item['adresse'] = resource.css("span.product-location::text").get()
-            if resource.css("img.imgcls::attr(src)").get() is not None:
-                item['thumbnail_url'] = resource.css("img.imgcls::attr(src)").get()
+            item['title'] = resource.css("a.post-link.post-vip span::text").get()
+            item['adresse'] = resource.css("span.address::text").get()
+            item['dateAnnonce'] = resource.css("span.address::text").get()
+            item['description'] = resource.css("h2.property-title a::text").get()
+            item['price'] = resource.css("span.price::text").get()
+            item['dateAnnonce'] = resource.css("time::text").get()
+            item['link'] = resource.css("div.info-row.phone.text-right a::attr(href)").get()
+            if resource.css("img.product-images::attr(data-src)").get() is not None:
+                item['thumbnail_url'] = resource.css("img.product-images::attr(data-src)").get()
                 item['thumbnail_name'] = item['thumbnail_url'].split('/')[-1]
             yield item
-        # next_page = response.css("div.load-more-txt").get()
-        # if next_page is not None:
-        #     yield response.follow(next_page, callback=self.parse)
+        next_page = response.css("li.next a::attr(href)").get()
+        if next_page is not None:
+            yield response.follow(next_page, callback=self.parse)
+

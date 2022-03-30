@@ -42,24 +42,34 @@ class RealestateScraperItem(scrapy.Item):
 
 
 class Spider(scrapy.Spider):
-    name = 'cavaSpider'
-    start_urls = ['https://cava.tn/category/immobilier/appartemen']
+    name = 'tunisiePromoSpider'
+    start_urls = ['https://www.tunisiapromo.com/recherche?listing_type=4&property_type=1&realtor_type=ANY&isearch=0&region1=ANY&plot_area_min=&plot_area_max=&floor_area_min=&floor_area_max=&bedrooms_min=&bedrooms_max=&year_built_min=&year_built_max=2022&roofs_min=&roofs_max=&price_min=&price_max=&property_search=Filtrer']
+    # for i in range(2, 1431):
+    #     start_urls.append(
+    #         'https://houni.tn/immobiliers/achat?categories=0&categories=1&categories=3&categories=2&budgetMin=10000&viewType=gallery&currentPage' + str( i))
 
     def parse(self, response):
-        list = response.css('div.col-xs-12.col-sm-12.col-md-12.col-lg-12.no-hor-padding div#fh5co-board div.columncls')
+        # total_annonce_string = response.css("strong.is-italic::text").get()
+        # total_annonce_number = int(''.join(filter(lambda i: i.isdigit(), total_annonce_string)))
+
+        list = response.css('article.short_ad_panel')
         for resource in list:
             item = RealestateScraperItem()
-            item['link'] = resource.css(
-                'div.image-grid.col-xs-12.col-sm-12.col-md-12.col-lg-12.no-hor-padding a::attr(href)').get()
-            item['title'] = resource.css(
-                'div.item-name.col-xs-12.col-sm-12.col-md-12.col-lg-12.no-hor-padding.pro_title a::text').get()
+            item['link'] = resource.css('a.headline::attr(href)').get()
+            item['title'] = resource.css('a.headline::text').get()
             # if response.css("h4.listingH4.floatR::text").get() is None
-            item['price'] = resource.css("div.price.bold.col-xs-12.col-sm-12.col-md-12.col-lg-12.no-hor-padding.pro_price span:nth-child(2)::text").get()
-            item['adresse'] = resource.css("span.product-location::text").get()
-            if resource.css("img.imgcls::attr(src)").get() is not None:
-                item['thumbnail_url'] = resource.css("img.imgcls::attr(src)").get()
+            item['adresse'] = resource.css("div.property_location.mtop b::text").get()
+            item['description'] = resource.css("p.listing-description::text").get()
+            item['dateAnnonce'] = resource.css("span.listing_added::text").get()
+            item['price'] = resource.css("span.price::text").get()
+            if resource.css("img.photo::attr(data-original)").get() is not None:
+                item['thumbnail_url'] = resource.css("img.photo::attr(data-original)").get()
                 item['thumbnail_name'] = item['thumbnail_url'].split('/')[-1]
+
             yield item
+
         # next_page = response.css("div.load-more-txt").get()
         # if next_page is not None:
         #     yield response.follow(next_page, callback=self.parse)
+
+    # def getDetails(self):
