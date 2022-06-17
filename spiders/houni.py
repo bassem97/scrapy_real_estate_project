@@ -49,15 +49,29 @@ class Spider(scrapy.Spider):
             'https://houni.tn/immobiliers/achat?categories=0&categories=1&categories=3&categories=2&budgetMin=10000&viewType=gallery&currentPage' + str( i))
 
     def parse(self, response):
-        total_annonce_string = response.css("strong.is-italic::text").get()
-        total_annonce_number = int(''.join(filter(lambda i: i.isdigit(), total_annonce_string)))
-
         list = response.css('div.card')
         for resource in list:
             item = RealestateScraperItem()
+            item['gouvernorat'] = None
+            item['delegation'] = None
+            item['localite'] = None
+            item['reference'] = None
+            item['nbpiece_superficie_habitable'] = None
+            item['agence'] = None
+            item['tel'] = None
+            item['constructible'] = None
+            item['fonds'] = None
+            item['installations_sportives'] = None
+            item['climatisation'] = None
+            item['chauffage'] = None
+            item['plein_air'] = None
+            item['service'] = None
+            item['cuisine'] = None
+            item['anneeConst'] = None
+            item['description'] = None
+            item['dateAnnonce'] = None
             item['link'] = resource.css('a.coveringLink::attr(href)').get()
             item['title'] = resource.css('h5.title.has-text-weight-bold.is-size-5 span span::text').get()
-            # if response.css("h4.listingH4.floatR::text").get() is None
             item['adresse'] = resource.css("p.subtitle.is-size-6.has-text-grey-darker.mb-3 span::text").get()
             item['price'] = resource.css("div.card-footer-item.has-text-primary.has-text-weight-bold.is-size-5::text").get()
             item['nbpiece'] = resource.css("div.card-details.has-text-grey-darker.mb-2 div div::text").get()
@@ -67,6 +81,9 @@ class Spider(scrapy.Spider):
             if resource.css("figure.image.is-3by2 img::attr(src)").get() is not None:
                 item['thumbnail_url'] = resource.css("figure.image.is-3by2 img::attr(src)").get()
                 item['thumbnail_name'] = item['thumbnail_url'].split('/')[-1]
+            else:
+                item['thumbnail_url'] = None
+                item['thumbnail_name'] = None
             yield item
         # next_page = response.css("div.load-more-txt").get()
         # if next_page is not None:

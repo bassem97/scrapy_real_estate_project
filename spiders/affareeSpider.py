@@ -1,10 +1,10 @@
 import scrapy
-
-# from realestate_scraper.items import RealestateScraperItem
+from pyasn1.type.univ import Null
 
 
 class RealestateScraperItem(scrapy.Item):
     # default_input_processor = MapCompose(unicode.strip)
+
     # define the fields for your item here like:
     link = scrapy.Field()  #
     gouvernorat = scrapy.Field()
@@ -32,8 +32,10 @@ class RealestateScraperItem(scrapy.Item):
     tel = scrapy.Field()
     agence = scrapy.Field()
     reference = scrapy.Field()
-
-
+    nbpiece_superficie_habitable = scrapy.Field()
+    thumbnail_url = scrapy.Field()
+    thumbnail_name = scrapy.Field()
+    garage = scrapy.Field()
 
 class Spider(scrapy.Spider):
     name = 'affareSpider'
@@ -61,14 +63,27 @@ class Spider(scrapy.Spider):
             item['superficie_habitable'] = resource.css("div.AnnoncesList_section7877o__bOPTn div:nth-child(3) p:nth-child(2) span:nth-child(2)::text").get()
             item['dateAnnonce'] = resource.css("div.AnnoncesList_section7877o__bOPTn div:nth-child(3) p:nth-child(3)::text").get()
             item['link'] = resource.css("a::attr(href)").get()
-            item['image'] = resource.css("img.AnnoncesList_item_imagePic__LPNER::src(href)").get()
-            # item['typeImm'] = resource.css("div.info-row.amenities.hide-on-grid p:nth-child(2)::text").get()
-            # item['gouvernorat'] = resource.css("address a:nth-child(1)::text").get()
-            # item['delegation'] = resource.css("address a:nth-child(1)::text").get()
-            # item['localite'] = resource.css("address a:nth-child(1)::text").get()
-            # item['nbpiece'] = resource.css("span.h-beds span::text").get()
-            # item['superficie_habitable'] = resource.css("span.h-area span::text").get()
-            # item['reference'] = resource.css("span.label-status.label-status-109.label.label-default a::text").get()
+            item['typeImm'] = None
+            item['gouvernorat'] = None
+            item['delegation'] = None
+            item['localite'] = None
+            item['reference'] =None
+            item['nbpiece_superficie_habitable'] =None
+            item['thumbnail_url'] =None
+            item['thumbnail_name'] =None
+            item['garage'] =None
+            item['agence'] =None
+            item['tel'] =None
+            item['constructible'] =None
+            item['fonds'] =None
+            item['installations_sportives'] =None
+            item['climatisation'] =None
+            item['salle_de_bain'] =None
+            item['chauffage'] =None
+            item['plein_air'] =None
+            item['service'] =None
+            item['typeImm'] =None
+
             yield item
         next_page = response.css("ul.pagination-lg.pagination li:last-child a::attr(href)").get()
         if next_page is not None:

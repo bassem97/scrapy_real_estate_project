@@ -59,12 +59,39 @@ class Spider(scrapy.Spider):
 
             if resource.css("div.list-area").get() is not None:
                 item['superficie_habitable'] = resource.css("div.list-area").get()
+            else :
+                item['superficie_habitable'] = None
 
             if resource.css("div.list-rooms").get() is not None:
                 item['nbpiece'] = resource.css("div.list-rooms").get()
+            else :
+                item['nbpiece'] = None
 
             if resource.css("div.list-offer-photo::attr(style)").get() is not None:
                 item['thumbnail_url'] = resource.css("div.list-offer-photo::attr(style)").get()
+            else :
+                item['thumbnail_url'] = None
+
+            item['typeImm'] = None
+            item['gouvernorat'] = None
+            item['delegation'] = None
+            item['localite'] = None
+            item['reference'] = None
+            item['nbpiece_superficie_habitable'] = None
+            item['agence'] = None
+            item['tel'] = None
+            item['constructible'] = None
+            item['fonds'] = None
+            item['installations_sportives'] = None
+            item['climatisation'] = None
+            item['chauffage'] = None
+            item['plein_air'] = None
+            item['service'] = None
+            item['salle_de_bain'] = None
+            item['cuisine'] = None
+            item['anneeConst'] = None
+            item['description'] = None
+            item['dateAnnonce'] = None
 
             yield item
         next_page = response.css("div.offer-pagination.margin-top-30 a:nth-last-child(2)::attr(href)").get()

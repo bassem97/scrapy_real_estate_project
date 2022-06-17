@@ -58,17 +58,39 @@ class Spider(scrapy.Spider):
             item['title'] = resource.css('h2.fontNeuron.text-capitalize a::text').get()
             item['adresse'] = resource.css("p.couper-mot::text").get()
             item['price'] = resource.css("span.textSecondary::text").get()
+            item['reference'] = resource.css("span.btn.btnSmall.btn-info.text-capitalize::text").get()
 
             if resource.css("footer.postColumnFoot  ul.list-unstyled li:nth-child(2) strong:nth-child(2)::text").get() is not None:
                 item['nbpiece'] = resource.css("footer.postColumnFoot  ul.list-unstyled li:nth-child(2) strong:nth-child(2)::text").get()
+            else :
+                item['nbpiece'] = None
 
             if resource.css("footer.postColumnFoot  ul.list-unstyled li:nth-child(1) strong:nth-child(2)::text").get() is not None:
                 item['superficie_habitable'] = resource.css("footer.postColumnFoot  ul.list-unstyled li:nth-child(1) strong:nth-child(2)::text").get()
-
-            item['reference'] = resource.css("span.btn.btnSmall.btn-info.text-capitalize::text").get()
+            else :
+                item['superficie_habitable'] = None
 
             if resource.css("div.imgHolder::attr(style)").get() is not None:
                 item['thumbnail_url'] = resource.css("div.imgHolder::attr(style)").get()
+            else :
+                item['thumbnail_url'] = None
+
+            item['typeImm'] = None
+            item['gouvernorat'] = None
+            item['delegation'] = None
+            item['localite'] = None
+            item['nbpiece_superficie_habitable'] = None
+            item['agence'] = None
+            item['tel'] = None
+            item['constructible'] = None
+            item['fonds'] = None
+            item['installations_sportives'] = None
+            item['climatisation'] = None
+            item['chauffage'] = None
+            item['plein_air'] = None
+            item['service'] = None
+
+
 
             yield item
         next_page = response.css("li.next.page-numbers a::attr(href)").get()

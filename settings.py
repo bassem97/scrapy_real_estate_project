@@ -8,18 +8,21 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 BOT_NAME = 'scrapy_project'
-
 SPIDER_MODULES = ['scrapy_project.spiders']
 NEWSPIDER_MODULE = 'scrapy_project.spiders'
-ITEM_PIPELINES = {'scrapy.pipelines.images.ImagesPipeline': 1}
-IMAGES_STORE = 'images'
+ITEM_PIPELINES = {'scrapy_project.pipelines.MongoDBPipeline': 300,}
+
+
+# Spider variables:
+MONGO_URI = "mongodb+srv://FARDI:FARDI@fardi.5zjpznh.mongodb.net/?retryWrites=true&w=majority"
+MONGO_DATABASE = "realestate"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'scrapy_project (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = False
+ROBOTSTXT_OBEY = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32

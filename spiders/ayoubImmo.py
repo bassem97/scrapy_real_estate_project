@@ -57,20 +57,52 @@ class Spider(scrapy.Spider):
 
             if resource.css("div.thum_data.bg-gray.mt_15 ul li:nth-child(1) span::text").get() is not None:
                 item['superficie_habitable'] = resource.css("div.thum_data.bg-gray.mt_15 ul li:nth-child(1) span::text").get()
+            else :
+                item['superficie_habitable'] = None
 
             if resource.css("div.thum_data.bg-gray.mt_15 ul li:nth-child(3) span::text").get() is not None:
                 item['salle_de_bain'] = resource.css("div.thum_data.bg-gray.mt_15 ul li:nth-child(3) span::text").get()
+            else :
+                item['salle_de_bain'] = None
 
             if resource.css("div.thum_data.bg-gray.mt_15 ul li:nth-child(2) span::text").get() is not None:
                 item['nbpiece'] = resource.css("div.thum_data.bg-gray.mt_15 ul li:nth-child(2) span::text").get()
+            else:
+                item['nbpiece'] = None
 
             if resource.css("div.thum_data.bg-gray.mt_15 ul li:nth-child(4) span::text").get() is not None:
                 item['garage'] = resource.css("div.thum_data.bg-gray.mt_15 ul li:nth-child(4) span::text").get()
+            else:
+                item['garage'] = None
 
             if resource.css("div.div-img.lazy::attr(data-src)").get() is not None:
                 item['thumbnail_url'] = resource.css("div.div-img.lazy::attr(data-src)").get()
+            else:
+                item['thumbnail_url'] = None
+
+
+            item['typeImm'] = None
+            item['gouvernorat'] = None
+            item['delegation'] = None
+            item['localite'] = None
+            item['reference'] =None
+            item['nbpiece_superficie_habitable'] =None
+            item['agence'] =None
+            item['tel'] =None
+            item['constructible'] =None
+            item['fonds'] =None
+            item['installations_sportives'] =None
+            item['climatisation'] =None
+            item['chauffage'] =None
+            item['plein_air'] =None
+            item['service'] =None
+
 
             yield item
         next_page = response.css("div.nav_pages a:nth-last-child(2)::attr(href)").get()
         if next_page is not None:
             yield response.follow(next_page, callback=self.parse)
+
+            # default_input_processor = MapCompose(unicode.strip)
+            # define the fields for your item here like:
+
