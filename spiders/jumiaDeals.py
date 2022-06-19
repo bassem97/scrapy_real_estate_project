@@ -52,6 +52,20 @@ class Spider(scrapy.Spider):
         list = response.css("article.post-holder.product-click")
         for resource in list:
             item = RealestateScraperItem()
+            item['gouvernorat'] = None
+            item['delegation'] = None
+            item['localite'] = None
+            item['reference'] = None
+            item['tel'] = None
+            item['constructible'] = None
+            item['fonds'] = None
+            item['installations_sportives'] = None
+            item['climatisation'] = None
+            item['chauffage'] = None
+            item['plein_air'] = None
+            item['service'] = None
+            item['cuisine'] = None
+            item['anneeConst'] = None
             item['title'] = resource.css("a.post-link.post-vip span::text").get()
             item['adresse'] = resource.css("span.address::text").get()
             item['dateAnnonce'] = resource.css("span.address::text").get()
@@ -62,6 +76,10 @@ class Spider(scrapy.Spider):
             if resource.css("img.product-images::attr(data-src)").get() is not None:
                 item['thumbnail_url'] = resource.css("img.product-images::attr(data-src)").get()
                 item['thumbnail_name'] = item['thumbnail_url'].split('/')[-1]
+            else :
+                item['thumbnail_url'] = None
+                item['thumbnail_name'] = None
+
             yield item
         next_page = response.css("li.next a::attr(href)").get()
         if next_page is not None:
