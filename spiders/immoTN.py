@@ -49,6 +49,23 @@ class Spider(scrapy.Spider):
         list = response.css('article.g5core__gutter-item.g5ere__property-item.g5ere__property-skin-08')
         for resource in list:
             item = RealestateScraperItem()
+            item['gouvernorat'] = None
+            item['delegation'] = None
+            item['localite'] = None
+            item['reference'] = None
+            item['nbpiece_superficie_habitable'] = None
+            item['tel'] = None
+            item['constructible'] = None
+            item['fonds'] = None
+            item['installations_sportives'] = None
+            item['climatisation'] = None
+            item['chauffage'] = None
+            item['plein_air'] = None
+            item['service'] = None
+            item['cuisine'] = None
+            item['anneeConst'] = None
+            item['description'] = None
+            item['dateAnnonce'] = None
             item['link'] = resource.css('a.g5core__entry-thumbnail.g5core__embed-responsive.g5core__image-size-::attr(href)').get()
             item['title'] = resource.css('h2.item-title a::text').get()
             item['adresse'] = resource.css("address::text").get()
@@ -60,17 +77,13 @@ class Spider(scrapy.Spider):
 
             if resource.css("li.h-area span:nth-child(2)::text").get() is not None:
                 item['superficie_habitable'] = resource.css("li.h-area span:nth-child(2)::text").get()
-
-            # if resource.css("footer.postColumnFoot  ul.list-unstyled li:nth-child(2) strong:nth-child(2)::text").get() is not None:
-            #     item['nbpiece'] = resource.css("footer.postColumnFoot  ul.list-unstyled li:nth-child(2) strong:nth-child(2)::text").get()
-            #
-            # if resource.css("footer.postColumnFoot  ul.list-unstyled li:nth-child(1) strong:nth-child(2)::text").get() is not None:
-            #     item['superficie_habitable'] = resource.css("footer.postColumnFoot  ul.list-unstyled li:nth-child(1) strong:nth-child(2)::text").get()
-
-            # item['reference'] = resource.css("span.btn.btnSmall.btn-info.text-capitalize::text").get()
+            else :
+                item['superficie_habitable'] = None
 
             if resource.css("img.img-fluid.wp-post-image::attr(src)").get() is not None:
                 item['thumbnail_url'] = resource.css("img.img-fluid.wp-post-image::attr(src)").get()
+            else :
+                item['thumbnail_url'] = None
 
             yield item
         next_page = response.css("ul.pagination.justify-content-center li:nth-last-child(2) a::attr(href)").get()
