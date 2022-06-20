@@ -50,21 +50,42 @@ class Spider(scrapy.Spider):
         list = response.css('div.listing-item')
         for resource in list:
             item = RealestateScraperItem()
+            item['gouvernorat'] = None
+            item['delegation'] = None
+            item['localite'] = None
+            item['reference'] = None
+            item['tel'] = None
+            item['constructible'] = None
+            item['fonds'] = None
+            item['installations_sportives'] = None
+            item['climatisation'] = None
+            item['chauffage'] = None
+            item['plein_air'] = None
+            item['service'] = None
+            item['cuisine'] = None
+            item['anneeConst'] = None
+
             item['link'] = resource.css('a.listing-img-container::attr(href)').get()
             item['title'] = resource.css('h4.couper-mot a::text').get()
             item['adresse'] = resource.css("div.listing-title").get().split('>')[-2]
             item['price'] = resource.css("span.listing-price::text").get()
+            item['typeImm'] = resource.css("div.listing-badges span:nth-child(2)::text").get()
+
 
             if resource.css("ul.listing-features span::text").get() is not None:
                 item['superficie_habitable'] = resource.css("ul.listing-features span::text").get()
+            else :
+                item['superficie_habitable'] = None
 
             if resource.css("ul.listing-features span:nth-child(4)::text").get() is not None:
                 item['nbpiece'] = resource.css("ul.listing-features span:nth-child(4)::text").get()
-
-            item['typeImm'] = resource.css("div.listing-badges span:nth-child(2)::text").get()
+            else :
+                item['nbpiece'] = None
 
             if resource.css("div.img-slider-list::attr(style)").get() is not None:
                 item['thumbnail_url'] = resource.css("div.img-slider-list::attr(style)").get()
+            else :
+                item['thumbnail_url'] = None
 
             yield item
         next_page = response.css("nav.pagination ul li:nth-last-child(2) a::attr(href)").get()
