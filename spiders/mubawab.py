@@ -50,6 +50,20 @@ class Spider(scrapy.Spider):
         list = response.css('div.col-9 ul.ulListing li.listingBox.w100')
         for resource in list:
             item = RealestateScraperItem()
+            item['gouvernorat'] = None
+            item['delegation'] = None
+            item['localite'] = None
+            item['reference'] = None
+            item['tel'] = None
+            item['constructible'] = None
+            item['fonds'] = None
+            item['installations_sportives'] = None
+            item['climatisation'] = None
+            item['chauffage'] = None
+            item['plein_air'] = None
+            item['service'] = None
+            item['cuisine'] = None
+            item['anneeConst'] = None
             item['description'] = resource.css("p.listingP.descLi::text").get()
             # if response.css("h4.listingH4.floatR::text").get() is None
             item['price'] = resource.css("span.priceTag.hardShadow.float-right.floatL::text").get()
@@ -59,6 +73,9 @@ class Spider(scrapy.Spider):
             if resource.css("img.w100.sliderImage.firstPicture::attr(data-url)").get() is not None:
                 item['thumbnail_url'] = resource.css("img.w100.sliderImage.firstPicture::attr(data-url)").get()
                 item['thumbnail_name'] = item['thumbnail_url'].split('/')[-1]
+            else :
+                item['thumbnail_url'] = None
+                item['thumbnail_name'] = None
 
             yield item
         next_page = response.css("div.paginationDots.sMargTop.centered a:last-child::attr(href)").get()

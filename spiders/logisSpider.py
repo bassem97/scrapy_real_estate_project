@@ -45,6 +45,20 @@ class Spider(scrapy.Spider):
         listt =  response.css("div.property-listing.list-view div.row div.item-wrap.infobox_trigger")
         for resource in listt:
             item = RealestateScraperItem()
+            item['gouvernorat'] = None
+            item['delegation'] = None
+            item['localite'] = None
+            item['reference'] = None
+            item['tel'] = None
+            item['constructible'] = None
+            item['fonds'] = None
+            item['installations_sportives'] = None
+            item['climatisation'] = None
+            item['chauffage'] = None
+            item['plein_air'] = None
+            item['service'] = None
+            item['cuisine'] = None
+            item['anneeConst'] = None
             item['typeImm'] = resource.css("div.info-row.amenities.hide-on-grid p:nth-child(2)::text").get()
             item['description'] = resource.css("h2.property-title a::text").get()
             item['price'] = resource.css("span.item-price::text").get()
