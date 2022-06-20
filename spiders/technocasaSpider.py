@@ -8,6 +8,7 @@ class RealestateScraperItem(scrapy.Item):
     # default_input_processor = MapCompose(unicode.strip)
     # define the fields for your item here like:
     link = scrapy.Field()  #
+    link = scrapy.Field()  #
     gouvernorat = scrapy.Field()
     delegation = scrapy.Field()
     localite = scrapy.Field()
@@ -33,6 +34,9 @@ class RealestateScraperItem(scrapy.Item):
     tel = scrapy.Field()
     agence = scrapy.Field()
     reference = scrapy.Field()
+    image = scrapy.Field()
+    thumbnail_url = scrapy.Field()
+    thumbnail_name = scrapy.Field()
 
 
 
@@ -48,6 +52,20 @@ class Spider(scrapy.Spider):
         listt =  response.css("div.estates-list")
         for resource in listt:
             item = RealestateScraperItem()
+            item['gouvernorat'] = None
+            item['delegation'] = None
+            item['localite'] = None
+            item['reference'] = None
+            item['tel'] = None
+            item['constructible'] = None
+            item['fonds'] = None
+            item['installations_sportives'] = None
+            item['climatisation'] = None
+            item['chauffage'] = None
+            item['plein_air'] = None
+            item['service'] = None
+            item['cuisine'] = None
+            item['anneeConst'] = None
             item['typeImm'] = resource.css("div.info-row.amenities.hide-on-grid p:nth-child(2)::text").get()
             item['description'] = resource.css("h2.property-title a::text").get()
             item['price'] = resource.css("span.item-price::text").get()
