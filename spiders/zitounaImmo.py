@@ -50,6 +50,25 @@ class Spider(scrapy.Spider):
         list = response.css('div.col-md-6.col-lg-6')
         for resource in list:
             item = RealestateScraperItem()
+            item['typeImm'] = None
+            item['gouvernorat'] = None
+            item['delegation'] = None
+            item['localite'] = None
+            item['reference'] = None
+            item['nbpiece_superficie_habitable'] = None
+            item['agence'] = None
+            item['tel'] = None
+            item['constructible'] = None
+            item['fonds'] = None
+            item['installations_sportives'] = None
+            item['climatisation'] = None
+            item['chauffage'] = None
+            item['plein_air'] = None
+            item['service'] = None
+            item['cuisine'] = None
+            item['anneeConst'] = None
+            item['description'] = None
+            item['dateAnnonce'] = None
             item['price'] = resource.css("div.fp_price::text").get()
             if item['price']  == "Prix sur demande" :
                 yield None
@@ -61,18 +80,26 @@ class Spider(scrapy.Spider):
 
                 if resource.css("ul.prop_details.mb0 li:nth-child(3)::text").get()  is not None:
                     item['superficie_habitable'] = resource.css("ul.prop_details.mb0 li:nth-child(3)::text").get()
+                else :
+                    item['superficie_habitable'] = None
 
                 if resource.css("ul.prop_details.mb0 li:nth-child(2)::text").get()  is not None:
                     item['salle_de_bain'] = resource.css("ul.prop_details.mb0 li:nth-child(2)::text").get()
+                else : 
+                    item['salle_de_bain'] = None
 
                 if resource.css("ul.prop_details.mb0 li:nth-child(1)::text").get() is not None:
                     item['nbpiece'] = resource.css("ul.prop_details.mb0 li:nth-child(1)::text").get()
+                else : 
+                    item['nbpiece'] = None
 
 
                 if resource.css("div.div-img.lazy::attr(data-src)").get() is not None:
                     item['thumbnail_url'] = resource.css("div.div-img.lazy::attr(data-src)").get()
+                else :
+                    item['thumbnail_url'] = None
 
-                yield item
+            yield item
 
 
         next_page = response.css("div.mbp_pagination ul li:nth-last-child(2) a::attr(href)").get()
