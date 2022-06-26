@@ -55,6 +55,20 @@ class Spider(scrapy.Spider):
         list = response.css('article.short_ad_panel')
         for resource in list:
             item = RealestateScraperItem()
+            item['gouvernorat'] = None
+            item['delegation'] = None
+            item['localite'] = None
+            item['reference'] = None
+            item['tel'] = None
+            item['constructible'] = None
+            item['fonds'] = None
+            item['installations_sportives'] = None
+            item['climatisation'] = None
+            item['chauffage'] = None
+            item['plein_air'] = None
+            item['service'] = None
+            item['cuisine'] = None
+            item['anneeConst'] = None
             item['link'] = resource.css('a.headline::attr(href)').get()
             item['title'] = resource.css('a.headline::text').get()
             # if response.css("h4.listingH4.floatR::text").get() is None
@@ -65,6 +79,9 @@ class Spider(scrapy.Spider):
             if resource.css("img.photo::attr(data-original)").get() is not None:
                 item['thumbnail_url'] = resource.css("img.photo::attr(data-original)").get()
                 item['thumbnail_name'] = item['thumbnail_url'].split('/')[-1]
+            else :
+                item['thumbnail_url'] = None;
+                item['thumbnail_name'] =None;
 
             yield item
 
